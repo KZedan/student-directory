@@ -1,5 +1,5 @@
 
-def input_students(cohort = :november)
+def input_students
   puts "Please enter the names of the students followed by their"
   puts "- Hobbies".center(50)
   puts "- Country of birth".center(50)
@@ -8,7 +8,7 @@ def input_students(cohort = :november)
   puts "To finish, just hit return twice".center(50)
 
   students = []
-
+  cohorts = ["january", "febuary", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
   name = gets.chomp
 
   while !name.empty? do
@@ -16,8 +16,8 @@ def input_students(cohort = :november)
     country_of_birth = gets.chomp
     height = gets.chomp
     cohort = gets.chomp
-    if cohort != "november"
-      puts "invalid cohort!"
+    if cohorts.index(cohort.downcase) == nil
+      puts "Invalid cohort! Cohort set to november by default."
       cohort = "november"
     end
     students << {name: name, hobbies: hobbies, country: country_of_birth, height: height, cohort: cohort.to_sym}
