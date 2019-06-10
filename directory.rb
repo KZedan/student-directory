@@ -1,10 +1,10 @@
 
 def input_students
-  puts "Please enter the names of the students followed by their
-  - Hobbies
-  - Country of birth
-  - Height"
-  puts "To finish, just hit return twice"
+  puts "Please enter the names of the students followed by their"
+  puts "- Hobbies".center(50)
+  puts "- Country of birth".center(50)
+  puts "- Height".center(50)
+  puts "To finish, just hit return twice".center(50)
 
   students = []
 
