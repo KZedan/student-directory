@@ -1,10 +1,25 @@
 @students = []
+@count = 0
 
 def interactive_menu
   loop do
     print_menu
     process(gets.chomp)
   end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
+  puts "9. Exit"
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
 end
 
 def process(selection)
@@ -15,6 +30,8 @@ def process(selection)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else
@@ -22,17 +39,14 @@ def process(selection)
   end
 end
 
-def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "9. Exit"
-end
-
-def show_students
-  print_header
-  print_students_list
-  print_footer
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, hobbies, country_of_birth, height, cohort = line.chomp.split(",")
+    @students << {name: name, hobbies: hobbies, country: country_of_birth, height: height, cohort: cohort.to_sym}
+    @count += 1
+  end
+  file.close
 end
 
 def cohort_defaulter(cohort)
@@ -45,8 +59,8 @@ def cohort_defaulter(cohort)
   cohort
 end
 
-def students_or_student_decider(count)
-  if count == 1
+def students_or_student_decider
+  if @count == 1
     puts "Now we have #{@students.count} student"
   else
     puts "Now we have #{@students.count} students"
@@ -62,7 +76,6 @@ def input_students
   puts "To finish, just hit return twice"
 
   name = gets.delete("\n")
-  count = 0
 
   while !name.empty? do
     hobbies = gets.chomp
@@ -70,9 +83,9 @@ def input_students
     height = gets.chomp
     cohort = gets.chomp
     cohort_defaulter(cohort)
-    count += 1
+    @count += 1
     @students << {name: name, hobbies: hobbies, country: country_of_birth, height: height, cohort: cohort.to_sym}
-    students_or_student_decider(count)
+    students_or_student_decider
     name = gets.chomp
   end
 end
