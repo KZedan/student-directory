@@ -33,6 +33,9 @@ def print_header
 end
 
 def print(students)
+  students = students.sort_by do |student|
+    student[:cohort]
+  end
   students.each_with_index do |student, index|
     while student[:name][0] == "L" && student[:name].length < 12
       puts "#{index+1} #{student[:name]} #{student[:hobbies]} #{student[:country]} #{student[:height]} (#{student[:cohort]} cohort)"
