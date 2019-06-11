@@ -9,7 +9,7 @@ def input_students
 
   cohorts = ["january", "febuary", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
   students = []
-  name = gets.chomp
+  name = gets.delete("\n")
   count = 0
 
   while !name.empty? do
