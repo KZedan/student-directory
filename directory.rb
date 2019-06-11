@@ -4,7 +4,7 @@
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -39,18 +39,39 @@ def process(selection)
   end
 end
 
-def load_students
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+def load_students(filename = "students.csv")
   file = File.open("students.csv", "r")
   file.readlines.each do |line|
     name, hobbies, country_of_birth, height, cohort = line.chomp.split(",")
-    @students << {name: name, hobbies: hobbies, country: country_of_birth, height: height, cohort: cohort.to_sym}
+    student_insert(name, hobbies, country_of_birth, height, cohort)
     @count += 1
   end
   file.close
 end
 
+def student_insert(name, hobbies, country_of_birth, height, cohort)
+  @students << {name: name, hobbies: hobbies,
+    country: country_of_birth, height: height,
+    cohort: cohort.to_sym}
+end
+
 def cohort_defaulter(cohort)
-  cohorts = ["january", "febuary", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+  cohorts = ["january", "febuary", "march",
+     "april", "may", "june",
+     "july", "august", "september",
+     "october", "november", "december"]
 
   if cohorts.index(cohort.downcase) == nil
     puts "Invalid cohort! Cohort set to november by default."
@@ -75,18 +96,18 @@ def input_students
   puts "- Cohort"
   puts "To finish, just hit return twice"
 
-  name = gets.delete("\n")
+  name = STDIN.gets.delete("\n")
 
   while !name.empty? do
-    hobbies = gets.chomp
-    country_of_birth = gets.chomp
-    height = gets.chomp
-    cohort = gets.chomp
+    hobbies = STDIN.gets.chomp
+    country_of_birth = STDIN.gets.chomp
+    height = STDIN.gets.chomp
+    cohort = STDIN.gets.chomp
     cohort_defaulter(cohort)
     @count += 1
-    @students << {name: name, hobbies: hobbies, country: country_of_birth, height: height, cohort: cohort.to_sym}
+    student_insert(name, hobbies, country_of_birth, height, cohort)
     students_or_student_decider
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 end
 
@@ -101,7 +122,8 @@ def print_students_list
   end
 
   students.each_with_index do |student, index|
-    puts "#{index+1} #{student[:name]} #{student[:hobbies]} #{student[:country]} #{student[:height]} (#{student[:cohort]} cohort)"
+    puts "#{index+1} #{student[:name]} #{student[:hobbies]} #{student[:country]}
+     #{student[:height]} (#{student[:cohort]} cohort)"
   end
 end
 
@@ -116,11 +138,13 @@ end
 def save_students
   file = File.open("students.csv", "w")
   @students.each do |student|
-    student_data = [student[:name], student[:hobbies], student[:country], student[:height], student[:cohort]]
+    student_data = [student[:name], student[:hobbies], student[:country],
+    student[:height], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
   file.close
 end
 
+try_load_students
 interactive_menu
