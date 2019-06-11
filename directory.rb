@@ -80,11 +80,9 @@ def cohort_defaulter(cohort)
   cohort
 end
 
-def students_or_student_decider
+def students_or_student_decider(string)
   if @count == 1
-    puts "Now we have #{@students.count} student"
-  else
-    puts "Now we have #{@students.count} students"
+    string.gsub('students', 'student')
   end
 end
 
@@ -103,10 +101,10 @@ def input_students
     country_of_birth = STDIN.gets.chomp
     height = STDIN.gets.chomp
     cohort = STDIN.gets.chomp
-    cohort_defaulter(cohort)
+    cohort = cohort_defaulter(cohort)
     @count += 1
     student_insert(name, hobbies, country_of_birth, height, cohort)
-    students_or_student_decider
+    puts students_or_student_decider("We now have #{@students.count} students")
     name = STDIN.gets.chomp
   end
 end
@@ -122,17 +120,12 @@ def print_students_list
   end
 
   students.each_with_index do |student, index|
-    puts "#{index+1} #{student[:name]} #{student[:hobbies]} #{student[:country]}
-     #{student[:height]} (#{student[:cohort]} cohort)"
+    puts "#{index+1} #{student[:name]} #{student[:hobbies]} #{student[:country]} #{student[:height]} (#{student[:cohort]} cohort)"
   end
 end
 
 def print_footer
-  if @students.count == 1
-    puts "Overall, we have #{@students.count} great student"
-  else
-    puts "Overall, we have #{@students.count} great students"
-  end
+  puts students_or_student_decider("Overall, we have #{@students.count} great student")
 end
 
 def save_students
