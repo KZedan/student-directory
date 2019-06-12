@@ -1,3 +1,4 @@
+require "csv"
 @students = []
 @count = 0
 
@@ -33,12 +34,12 @@ def process(selection)
   when "3"
     save_students
     puts "Name the file you would like to save to"
-    file = STDIN.gets.chomp
+    filename = STDIN.gets.chomp
     puts "Success!"
   when "4"
     load_students
     puts "Name the fil you would like to load from"
-    file = STDIN.gets.chomp
+    filename = STDIN.gets.chomp
     puts "Success!"
   when "9"
     puts "Bye!"
@@ -70,6 +71,8 @@ end
 def students_or_student_decider(string)
   if @count == 1
     string.gsub('students', 'student')
+  else
+    string
   end
 end
 
@@ -128,22 +131,18 @@ def try_load_students
 end
 
 def load_students(filename = "students.csv")
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, hobbies, country_of_birth, height, cohort = line.chomp.split(",")
-      student_insert(name, hobbies, country_of_birth, height, cohort)
-      @count += 1
-    end
+  CSV.foreach(filename, :quote_char => "|") do |line|
+    name, hobbies, country_of_birth, height, cohort = line
+    student_insert(name, hobbies, country_of_birth, height, cohort)
+    @count += 1
   end
 end
 
 def save_students(filename = "students.csv")
-  File.open(filename, "w") do |file|
+  CSV.open(filename, "a+") do |file|
     @students.each do |student|
-      student_data = [student[:name], student[:hobbies], student[:country],
+      file << [student[:name], student[:hobbies], student[:country],
       student[:height], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
     end
   end
 end
