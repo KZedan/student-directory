@@ -32,14 +32,14 @@ def process(selection)
     puts "Success!"
     show_students
   when "3"
-    save_students
     puts "Name the file you would like to save to"
     filename = STDIN.gets.chomp
+    save_students(filename)
     puts "Success!"
   when "4"
-    load_students
     puts "Name the fil you would like to load from"
     filename = STDIN.gets.chomp
+    load_students(filename)
     puts "Success!"
   when "9"
     puts "Bye!"
